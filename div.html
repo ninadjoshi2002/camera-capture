@@ -1,34 +1,44 @@
-<div>
-  <video id="video" width="640" height="480" autoplay></video>
-  <button id="startButton">Start Camera</button>
-  <button id="stopButton">Stop Camera</button>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camera Capture</title>
+</head>
+<body>
+  <div>
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="startButton">Start Camera</button>
+    <button id="stopButton">Stop Camera</button>
+  </div>
 
-<script>
-  const video = document.getElementById('video');
-  const startButton = document.getElementById('startButton');
-  const stopButton = document.getElementById('stopButton');
+  <script>
+    const video = document.getElementById('video');
+    const startButton = document.getElementById('startButton');
+    const stopButton = document.getElementById('stopButton');
 
-  navigator.mediaDevices.getUserMedia({ video: true })
-    .then((stream) => {
-      video.srcObject = stream;
-    })
-    .catch((error) => {
-      console.error('Error accessing the camera: ', error);
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((error) => {
+        console.error('Error accessing the camera: ', error);
+      });
+
+    startButton.addEventListener('click', () => {
+      video.play();
     });
 
-  startButton.addEventListener('click', () => {
-    video.play();
-  });
+    stopButton.addEventListener('click', () => {
+      const stream = video.srcObject;
+      const tracks = stream.getTracks();
 
-  stopButton.addEventListener('click', () => {
-    const stream = video.srcObject;
-    const tracks = stream.getTracks();
+      tracks.forEach((track) => {
+        track.stop();
+      });
 
-    tracks.forEach((track) => {
-      track.stop();
+      video.srcObject = null;
     });
-
-    video.srcObject = null;
-  });
-</script>
+  </script>
+</body>
+</html>
